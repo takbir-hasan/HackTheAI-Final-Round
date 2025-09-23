@@ -1,6 +1,7 @@
 import axios from "axios";
 import Complaint from "../models/complaint.js";
-
+import notices from "../data/notices.json" assert { type: "json" };
+import faq from "../data/faq.json" assert { type: "json" };
 
 // --- Helper to call SmythOS Agent ---
 async function callAgent(payload) {
@@ -23,7 +24,7 @@ async function callAgent(payload) {
 
 // --- Main Endpoint ---
 export const askQuestion = async (req, res) => {
-      const { query, notices = {}, faq = {} } = req.body;
+      const {query} = req.body;
       if (!query) return res.status(400).json({ success: false, error: "Query required" });
     
       try {

@@ -1,0 +1,23 @@
+{
+      "admission_fee": "The admission fee is 10,000 BDT.",
+      "exam_registration": "Exam registration must be done via the portal before the deadline.",
+      "library_timing": "Library is open from 9 AM to 8 PM, Sunday to Thursday.",
+      "id_card_collection": "Student ID cards can be collected from the Registrar's Office.",
+      "password_reset": "You can reset your portal password using the 'Forgot Password' option.",
+      "hostel_facility": "Hostel facilities are available upon application to the Student Affairs office.",
+      "transport_service": "University buses are available. Timetable is on the official website.",
+      "transcript_request": "Transcript can be requested from the Examination Office with a fee.",
+      "it_support": "For IT support, email support@university.edu.",
+      "canteen_hours": "Canteen remains open from 8 AM to 7 PM.",
+      "exam_rules": "Students must carry ID cards during all examinations.",
+      "medical_facility": "Medical Center is open 24/7 for all students.",
+      "internship_process": "Internship placement is facilitated by the Career Services office.",
+      "grading_system": "The grading system follows A-F with GPA scale.",
+      "attendance_policy": "Minimum 75% attendance is required to sit for exams.",
+      "scholarship_info": "Merit and need-based scholarships are available every semester.",
+      "wifi_access": "WiFi credentials are provided with student ID at IT helpdesk.",
+      "lost_and_found": "Lost items can be reported to the Security Office.",
+      "club_registration": "Students can join clubs by filling forms at Student Affairs.",
+      "exam_reschedule": "Exams can only be rescheduled with medical certificates."
+    }
+    
