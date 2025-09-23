@@ -12,7 +12,7 @@ import complaintRoutes from './routes/complaintRoutes.js';
 import askRoutes from './routes/askRoutes.js';
 
 dotenv.config();
-// connectDB();
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
