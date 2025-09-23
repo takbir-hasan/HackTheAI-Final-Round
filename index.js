@@ -8,9 +8,11 @@ import connectDB from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import complaintRoutes from './routes/complaintRoutes.js';
+import askRoutes from './routes/askRoutes.js';
 
 dotenv.config();
-connectDB();
+// connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +22,8 @@ app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/complaints', complaintRoutes);
+app.use('/api/ask', askRoutes); // ask a question
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
