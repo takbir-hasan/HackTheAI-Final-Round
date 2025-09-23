@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, refreshAccessToken, logout, register } from '../controllers/authController.js';
+import { login, refreshAccessToken, logout, register, requestPasswordOTP, resetPasswordWithOTP } from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -150,5 +150,66 @@ router.post('/refresh', refreshAccessToken);
  *         description: No token provided
  */
 router.post('/logout', logout);
+
+
+/**
+ * @openapi
+ * /api/auth/forgot-password-otp:
+ *   post:
+ *     summary: Request OTP for password reset
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: saniul@example.com
+ *     responses:
+ *       200:
+ *         description: OTP sent to user's email
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Email sending failed
+ */
+router.post('/forgot-password-otp', requestPasswordOTP);
+
+/**
+ * @openapi
+ * /api/auth/reset-password-otp:
+ *   post:
+ *     summary: Reset password using OTP
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: saniul@example.com
+ *               otp:
+ *                 type: string
+ *                 example: "123456"
+ *               newPassword:
+ *                 type: string
+ *                 example: newpassword123
+ *     responses:
+ *       200:
+ *         description: Password reset successful, returns access token
+ *       400:
+ *         description: Invalid or expired OTP
+ *       404:
+ *         description: User not found
+ */
+router.post('/reset-password-otp', resetPasswordWithOTP);
 
 export default router;
