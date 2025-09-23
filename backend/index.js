@@ -11,6 +11,10 @@ import userRoutes from './routes/userRoutes.js';
 import complaintRoutes from './routes/complaintRoutes.js';
 import askRoutes from './routes/askRoutes.js';
 
+
+// Rate Limiter
+import { authLimiter, generalLimiter } from './config/rateLimit.js';
+
 dotenv.config();
 connectDB();
 
@@ -20,7 +24,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',authLimiter, authRoutes);
+
+// Globally Rate Limiter
+app.use(generalLimiter);
+
 app.use('/api/users', userRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/ask', askRoutes); // ask a question
