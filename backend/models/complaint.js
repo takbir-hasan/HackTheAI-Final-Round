@@ -6,6 +6,7 @@ const complaintSchema = new mongoose.Schema({
   type: { type: String }, // IT Issue | Facility Issue | Admin Issue
   answer: { type: String }, // answer to the complaint
   complaint: { type: String },
+  status: { type: String, enum: ["pending", "in-progress", "resolved"], default: "pending" },
   createdAt: { type: Date, default: Date.now }
 });
 
