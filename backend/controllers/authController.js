@@ -12,6 +12,47 @@ const REFRESH_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN;
 
 let refreshTokens = [];
 
+
+// Register
+export const register = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // Check if user exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+
+  try {
+    // Save user (password is hashed automatically)
+    const newUser = new User({ name, email, password });
+    const saveUser = await newUser.save();
+
+    // Generate tokens
+    const accessToken = jwt.sign(
+      { id: saveUser._id, email: saveUser.email },
+      ACCESS_SECRET,
+      { expiresIn: ACCESS_EXPIRES_IN }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: saveUser._id, email: saveUser.email },
+      REFRESH_SECRET,
+      { expiresIn: REFRESH_EXPIRES_IN }
+    );
+
+    refreshTokens.push(refreshToken);
+
+    res.status(201).json({ 
+      message: 'User registered successfully',
+      user: saveUser, accessToken, refreshToken 
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
