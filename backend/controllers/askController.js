@@ -43,6 +43,7 @@ export const askQuestion = async (req, res) => {
       
         if (parsedResp?.category === "complaint") {
           await new Complaint({
+            user: req.user.id,
             category: parsedResp.category || "complaint",
             type: parsedResp.type || "Other",
             answer: parsedResp.answer || "",
