@@ -62,5 +62,4 @@ const ChatSection = () => {
     </section>
   );
 };
-
 export default ChatSection;
