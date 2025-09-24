@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import Complaint from '../models/complaint.js';
+import { getAllComplaints} from "../controllers/complaintController.js";
 
 const router = express.Router();
 
@@ -15,9 +15,7 @@ const router = express.Router();
  *       200:
  *         description: List of complaints
  */
-router.get('/', protect, async (req, res) => {
-  const complaints = await Complaint.find();
-      res.json(complaints);
-});
+router.get("/", protect, getAllComplaints);
+
 
 export default router;

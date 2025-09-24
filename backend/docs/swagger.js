@@ -4,9 +4,18 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Node.js Swagger API',
+      title: 'AI Smart University Helpdesk',
       version: '1.0.0',
-      description: 'API documentation with JWT auth',
+      description: `
+      This backend provides a smart university helpdesk system using AI agents.
+
+      Features:
+       - Complaint Resolver: Automatically classify and respond to complaints.
+       - Notice/Info Assistant
+       - FAQ Agent
+
+      This backend is multi-functional, scalable.
+      `,
     },
     servers: [
       { url: 'http://localhost:3000' },
@@ -26,7 +35,7 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js'], // Path to your route files
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
