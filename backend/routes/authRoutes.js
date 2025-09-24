@@ -80,6 +80,23 @@ router.post('/register', register);
  * /api/auth/login:
  *   post:
  *     summary: Login user
+ *     description: |
+ *       This endpoint allows a registered user to **log in** to the system.  
+ *       
+ *       ### Workflow
+ *       1. User provides **email and password**.  
+ *       2. The system checks if the email exists.  
+ *          - If not → returns `401 Invalid email or password`.  
+ *       3. If email exists, the password is verified using bcrypt.  
+ *          - If invalid → returns `401 Invalid email or password`.  
+ *       4. On success, **Access Token** and **Refresh Token** are generated and returned.  
+ *       5. Refresh token is stored in server memory for token rotation.  
+ *
+ *       ### Tokens
+ *       - **Access Token** → Used for authentication in protected routes.  
+ *       - **Refresh Token** → Used to generate new access tokens when expired.  
+ *
+ *       ⚠️ **Rate Limiting:** To prevent abuse, this endpoint is **limited to 5 requests per minute per IP**. Exceeding this will return a `429 Too Many Requests` response.
  *     tags:
  *       - Auth
  *     requestBody:
@@ -109,6 +126,10 @@ router.post('/register', register);
  *                   type: string
  *       401:
  *         description: Invalid email or password
+ *       429:
+ *         description: Too many requests (rate limit exceeded)
+ *       500:
+ *         description: Server error
  */
 router.post('/login', login);
 
