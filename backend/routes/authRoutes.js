@@ -9,6 +9,24 @@ const router = express.Router();
  * /api/auth/register:
  *   post:
  *     summary: Register a new user
+ *     description: |
+ *       This endpoint allows a **new user** to create an account. 
+ *       
+ *       ### Workflow
+ *       1. User provides **name, email, and password**.  
+ *       2. The system checks if the email is already registered.  
+ *          - If yes → returns `400 User already exists`.  
+ *       3. If not, a new user is created (password is **hashed automatically** in the model).  
+ *       4. On success, the system generates and returns both **Access Token** and **Refresh Token**.  
+ *       5. The refresh token is also stored in server memory for token rotation.  
+ *
+ *       ### Tokens
+ *       - **Access Token** → Used for authentication in protected routes.  
+ *       - **Refresh Token** → Used to generate new access tokens when expired.  
+ *
+ *       ⚠️ Passwords are never stored in plain text, only hashed.  
+ *
+ *       ⚠️ **Rate Limiting:** To prevent abuse, this endpoint is **limited to 5 requests per minute per IP**. Exceeding this will return a `429 Too Many Requests` response.
  *     tags:
  *       - Auth
  *     requestBody:
@@ -50,6 +68,8 @@ const router = express.Router();
  *                   type: string
  *       400:
  *         description: User already exists
+ *       429:
+ *         description: Too many requests (rate limit exceeded)
  *       500:
  *         description: Server error
  */
