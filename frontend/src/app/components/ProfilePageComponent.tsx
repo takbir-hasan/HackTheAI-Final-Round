@@ -189,15 +189,15 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
               <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-b border-gray-100">
                 <div className="flex flex-col items-center text-center">
                   <div className="relative mb-4">
-                    <img
+                    {/* <img
                       src={photoPreview || '/api/placeholder/80/80'}
                       alt="Profile"
                       className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
-                    />
+                    /> */}
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 border-2 border-white rounded-full"></div>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {formData.firstName} {formData.lastName}
+                    {formData.firstName}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">{formData.email}</p>
                 </div>
@@ -232,21 +232,6 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     Security Settings
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('preferences')}
-                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      activeTab === 'preferences'
-                        ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
-                  >
-                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Preferences
                   </button>
                 </nav>
 
@@ -292,39 +277,6 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
                     </div>
                   )}
 
-                  {/* Profile Photo Section */}
-                  <div className="mb-8 pb-6 border-b border-gray-100">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Photo</h3>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                      <img
-                        src={photoPreview || '/api/placeholder/100/100'}
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-sm"
-                      />
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <button
-                          onClick={triggerPhotoUpload}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 text-sm font-medium"
-                        >
-                          Change Photo
-                        </button>
-                        <button
-                          onClick={() => setPhotoPreview(null)}
-                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 text-sm font-medium"
-                        >
-                          Remove Photo
-                        </button>
-                      </div>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoChange}
-                        className="hidden"
-                      />
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Maximum file size is 5MB.</p>
-                  </div>
 
                   {/* Form Fields */}
                   <div className="space-y-6">
@@ -332,7 +284,7 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
                       {/* First Name */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          First Name <span className="text-red-500">*</span>
+                          Name <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -351,32 +303,6 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
                               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                             </svg>
                             {errors.firstName}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Last Name */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Last Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 ${
-                            errors.lastName ? 'border-red-300 focus:ring-red-500' : 'border-gray-300'
-                          } ${isLoading ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'bg-white'}`}
-                          placeholder="Enter your last name"
-                        />
-                        {errors.lastName && (
-                          <p className="text-red-600 text-sm mt-1 flex items-center">
-                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                            {errors.lastName}
                           </p>
                         )}
                       </div>
@@ -406,55 +332,6 @@ const ProfilePageComponent: React.FC<ProfilePageComponentProps> = ({
                           {errors.email}
                         </p>
                       )}
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {/* Phone Number */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                        <input
-                          type="tel"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 ${
-                            errors.phoneNumber ? 'border-red-300 focus:ring-red-500' : 'border-gray-300'
-                          } ${isLoading ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'bg-white'}`}
-                          placeholder="Enter your phone number"
-                        />
-                        {errors.phoneNumber && (
-                          <p className="text-red-600 text-sm mt-1 flex items-center">
-                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                            {errors.phoneNumber}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Date of Birth */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
-                        <input
-                          type="date"
-                          name="dateOfBirth"
-                          value={formData.dateOfBirth}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 ${
-                            errors.dateOfBirth ? 'border-red-300 focus:ring-red-500' : 'border-gray-300'
-                          } ${isLoading ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'bg-white'}`}
-                        />
-                        {errors.dateOfBirth && (
-                          <p className="text-red-600 text-sm mt-1 flex items-center">
-                            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                            {errors.dateOfBirth}
-                          </p>
-                        )}
-                      </div>
                     </div>
                   </div>
 
