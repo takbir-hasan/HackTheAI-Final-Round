@@ -42,11 +42,21 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
-    scrollToBottom();
+    // Use requestAnimationFrame to ensure DOM is updated before scrolling
+    const timer = requestAnimationFrame(() => {
+      scrollToBottom();
+    });
+    return () => cancelAnimationFrame(timer);
   }, [messages]);
 
   const scrollToBottom = (): void => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      // Use scrollTop instead of scrollIntoView to prevent page jumping
+      const container = messagesEndRef.current.closest('.overflow-y-auto');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   };
 
   const generateId = (): string => {
@@ -63,9 +73,18 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
       timestamp: new Date(),
     };
   
-    setMessages((prev) => [...prev, userMessage]);
+    // Clear input immediately and maintain focus
+    const currentInput = inputRef.current;
     setInputValue("");
     setIsTyping(true);
+    
+    // Keep focus on input to prevent page jumping
+    if (currentInput) {
+      currentInput.focus();
+    }
+  
+    // Add user message
+    setMessages((prev) => [...prev, userMessage]);
   
     try {
       //Get token
@@ -107,6 +126,10 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
       ]);
     } finally {
       setIsTyping(false);
+      // Ensure input remains focused after operation
+      if (currentInput) {
+        currentInput.focus();
+      }
     }
   };
   
@@ -132,7 +155,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
   };
 
   return (
-    <div className={`flex flex-col h-screen bg-gray-50 pt-15 ${className}`}>
+    <div className={`flex flex-col h-screen bg-gray-50 pt-15 ${className}`} style={{ minHeight: '100vh', maxHeight: '100vh' }}>
       {/* Chat Header */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-500 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
         <div className="max-w-4xl mx-auto">
@@ -153,7 +176,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-0">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-0 scroll-smooth">
         <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {messages.map((message) => (
             <div
@@ -220,7 +243,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
       </div>
 
       {/* Input Area */}
-      <div className="bg-white text-black border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
+      <div className="bg-white text-black border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg flex-shrink-0">
         <div className="max-w-4xl mx-auto">
           <div className="flex space-x-3 sm:space-x-4 items-end">
             <div className="flex-1 relative">
@@ -250,7 +273,12 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
             </div>
             
             <button
-              onClick={handleSendMessage}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSendMessage();
+              }}
               disabled={!inputValue.trim() || disabled || isTyping}
               className="bg-purple-500 hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-2 sm:p-3 rounded-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transform hover:scale-105"
             >
