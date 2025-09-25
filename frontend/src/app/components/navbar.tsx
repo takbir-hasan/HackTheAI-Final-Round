@@ -79,7 +79,9 @@ const Navbar = () => {
       <div className="flex items-center justify-between px-2 mx-auto">
         {/* Logo and Brand */}
         <div className="flex items-center space-x-3">
-          <div className="bg-orange-500 p-2 rounded-lg">
+          <a 
+          href="/" 
+          className="bg-orange-500 p-2 rounded-lg">
             <svg 
               className="w-6 h-6 text-white" 
               fill="currentColor" 
@@ -87,7 +89,7 @@ const Navbar = () => {
             >
               <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
             </svg>
-          </div>
+          </a>
           <h1 className="text-xs md:text-base lg:text-xl font-semibold">
             AI Smart University Helpdesk
           </h1>

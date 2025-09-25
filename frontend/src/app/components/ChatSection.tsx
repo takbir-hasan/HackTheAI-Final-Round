@@ -41,7 +41,7 @@ const ChatSection = () => {
               "
               type="button"
             >
-              <span>Get Started</span>
+              <a href="/chat" >Get Started</a>
               <svg 
                 className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" 
                 fill="none" 

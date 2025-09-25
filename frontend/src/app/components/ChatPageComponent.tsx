@@ -28,13 +28,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "You can ask me about notices and how I will try to answer you according to my updated knowledge base. You can also ask me anything about university I will give it to corresponding department.",
-      sender: 'assistant',
-      timestamp: new Date()
-    },
-    {
-      id: '2',
-      text: "Sorry, I don't know the answer.",
+      text: "You can ask me about notices and FAQs and how I will try to answer you according to my updated knowledge base. You can also complaint anything about university I will give it to corresponding department.",
       sender: 'assistant',
       timestamp: new Date()
     },
@@ -75,8 +69,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
   
     try {
       //Get token
-      // const token = localStorage.getItem("token");
-      const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDJlYTkwYjg4ZDY5NzcwZTc2ODI4OSIsImVtYWlsIjoic2FuaXVsM0BnbWFpbC5jb20iLCJpYXQiOjE3NTg3NzU1MjksImV4cCI6MTc1ODc3NjQyOX0.jkJqfqq8vyEYITs5RrGV5MknXfakJrQ5QlFnj52JHRk";
+      const token = localStorage.getItem("accessToken");
   
       // Make API call
       const res = await fetch("http://localhost:3000/api/ask", {
