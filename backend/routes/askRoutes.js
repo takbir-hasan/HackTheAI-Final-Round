@@ -63,6 +63,6 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post('/', protect, askQuestion);
+router.post('/',protect, askQuestion);
 
 export default router;

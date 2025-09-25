@@ -61,35 +61,63 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
 
   const handleSendMessage = async (): Promise<void> => {
     if (!inputValue.trim() || disabled) return;
-
+  
     const userMessage: Message = {
       id: generateId(),
       text: inputValue.trim(),
-      sender: 'user',
-      timestamp: new Date()
+      sender: "user",
+      timestamp: new Date(),
     };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+  
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setIsTyping(true);
-
-    // Call the external handler if provided
-    if (onMessageSend) {
-      onMessageSend(userMessage.text);
-    }
-
-    // Simulate AI response
-    setTimeout(() => {
+  
+    try {
+      //Get token
+      // const token = localStorage.getItem("token");
+      const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDJlYTkwYjg4ZDY5NzcwZTc2ODI4OSIsImVtYWlsIjoic2FuaXVsM0BnbWFpbC5jb20iLCJpYXQiOjE3NTg3NzU1MjksImV4cCI6MTc1ODc3NjQyOX0.jkJqfqq8vyEYITs5RrGV5MknXfakJrQ5QlFnj52JHRk";
+  
+      // Make API call
+      const res = await fetch("http://localhost:3000/api/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: userMessage.id,
+          query: userMessage.text,
+        }),
+      });
+  
+      const data = await res.json();
+  
       const assistantMessage: Message = {
         id: generateId(),
-        text: "I understand your query. Let me help you with that information.",
-        sender: 'assistant',
-        timestamp: new Date()
+        text: data?.agentResponse?.answer || "Sorry, I couldn't find an answer.",
+        sender: "assistant",
+        timestamp: new Date(),
       };
-      setMessages(prev => [...prev, assistantMessage]);
+  
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("API Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: generateId(),
+          text: "There was a problem connecting to the server.",
+          sender: "assistant",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
+  
+  
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -199,7 +227,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
       </div>
 
       {/* Input Area */}
-      <div className="bg-white border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
+      <div className="bg-white text-black border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
         <div className="max-w-4xl mx-auto">
           <div className="flex space-x-3 sm:space-x-4 items-end">
             <div className="flex-1 relative">
@@ -239,18 +267,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
             </button>
           </div>
 
-          {/* Quick Suggestions */}
-          <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
-            {['When is exam?', 'WiFi not working', 'Admission fee?', 'Library hours?', 'Fee payment'].map((suggestion) => (
-              <button
-                key={suggestion}
-                onClick={() => setInputValue(suggestion)}
-                className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 sm:px-3 sm:py-2 rounded-full text-xs sm:text-sm transition-all duration-200 border border-blue-200 hover:border-blue-300 transform hover:scale-105"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
+        
         </div>
       </div>
     </div>
