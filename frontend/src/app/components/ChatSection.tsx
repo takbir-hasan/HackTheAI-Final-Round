@@ -1,12 +1,30 @@
 "use client";
 
 import React from 'react';
+import { useRouter } from "next/navigation";
+
 
 const ChatSection = () => {
   const handleChatClick = () => {
     // Add your chat functionality here
     console.log("Chat button clicked!");
   };
+
+  const router = useRouter();
+
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault(); // prevent default link behavior
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      router.push("/chat"); // redirect if logged in
+    } else {
+      alert("Please login first");
+    }
+  };
+
+
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
@@ -41,7 +59,7 @@ const ChatSection = () => {
               "
               type="button"
             >
-              <a href="/chat" >Get Started</a>
+              <a href="/chat" onClick={handleClick} >Get Started</a>
               <svg 
                 className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" 
                 fill="none" 

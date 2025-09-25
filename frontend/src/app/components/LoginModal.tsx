@@ -137,7 +137,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       localStorage.setItem("role", role);
       setFormData({ email: '', password: '' });
       onClose?.();
-      router.push("/profile");
+      router.push("/chat");
     } catch (err: any) {
       console.error("Login error:", err.response?.data || err.message);
 
