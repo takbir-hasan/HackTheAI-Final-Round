@@ -1,0 +1,260 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
+
+interface Message {
+  id: string;
+  text: string;
+  sender: 'user' | 'assistant';
+  timestamp: Date;
+  isTyping?: boolean;
+}
+
+interface ChatComponentProps {
+  className?: string;
+  onMessageSend?: (message: string) => void;
+  initialMessages?: Message[];
+  placeholder?: string;
+  disabled?: boolean;
+}
+
+const ChatPageComponent: React.FC<ChatComponentProps> = ({
+  className = '',
+  onMessageSend,
+  initialMessages = [],
+  placeholder = "Hello, how can I help you today?",
+  disabled = false
+}) => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      text: "You can ask me about notices and how I will try to answer you according to my updated knowledge base. You can also ask me anything about university I will give it to corresponding department.",
+      sender: 'assistant',
+      timestamp: new Date()
+    },
+    {
+      id: '2',
+      text: "Sorry, I don't know the answer.",
+      sender: 'assistant',
+      timestamp: new Date()
+    },
+    ...initialMessages
+  ]);
+  
+  const [inputValue, setInputValue] = useState<string>('');
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = (): void => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const generateId = (): string => {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  };
+
+  const handleSendMessage = async (): Promise<void> => {
+    if (!inputValue.trim() || disabled) return;
+
+    const userMessage: Message = {
+      id: generateId(),
+      text: inputValue.trim(),
+      sender: 'user',
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    // Call the external handler if provided
+    if (onMessageSend) {
+      onMessageSend(userMessage.text);
+    }
+
+    // Simulate AI response
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        id: generateId(),
+        text: "I understand your query. Let me help you with that information.",
+        sender: 'assistant',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInputValue(e.target.value);
+  };
+
+  const formatTime = (date: Date): string => {
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
+  return (
+    <div className={`flex flex-col h-screen bg-gray-50 pt-15 ${className}`}>
+      {/* Chat Header */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-500 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="bg-white bg-opacity-20 rounded-full p-2 sm:p-3">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">Chat</h2>
+              <p className="text-blue-100 text-sm sm:text-base">
+                AI Smart University Assistant
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-0">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`flex items-start space-x-2 sm:space-x-3 max-w-[85%] sm:max-w-[75%] lg:max-w-[70%]`}>
+                {message.sender === 'assistant' && (
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                  </div>
+                )}
+                
+                <div className="flex flex-col space-y-1">
+                  <div
+                    className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl text-sm sm:text-base leading-relaxed break-words ${
+                      message.sender === 'user'
+                        ? 'bg-purple-500 text-white rounded-br-md shadow-md'
+                        : 'bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100'
+                    }`}
+                  >
+                    {message.text}
+                  </div>
+                  <span className={`text-xs text-gray-500 px-1 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                    {formatTime(message.timestamp)}
+                  </span>
+                </div>
+
+                {message.sender === 'user' && (
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="flex items-start space-x-2 sm:space-x-3 max-w-[70%]">
+                <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div className="bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-2xl rounded-bl-md shadow-sm border border-gray-100">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 shadow-lg">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex space-x-3 sm:space-x-4 items-end">
+            <div className="flex-1 relative">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                placeholder={placeholder}
+                disabled={disabled}
+                className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              />
+              
+              {/* Attachment Button */}
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <button
+                  type="button"
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                  title="Add attachment"
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim() || disabled || isTyping}
+              className="bg-purple-500 hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-2 sm:p-3 rounded-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transform hover:scale-105"
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Quick Suggestions */}
+          <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
+            {['When is exam?', 'WiFi not working', 'Admission fee?', 'Library hours?', 'Fee payment'].map((suggestion) => (
+              <button
+                key={suggestion}
+                onClick={() => setInputValue(suggestion)}
+                className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 sm:px-3 sm:py-2 rounded-full text-xs sm:text-sm transition-all duration-200 border border-blue-200 hover:border-blue-300 transform hover:scale-105"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatPageComponent;
