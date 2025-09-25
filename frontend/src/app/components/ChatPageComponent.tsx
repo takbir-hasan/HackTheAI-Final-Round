@@ -211,7 +211,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
                 onKeyPress={handleKeyPress}
                 placeholder={placeholder}
                 disabled={disabled}
-                className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base text-black placeholder-gray-500 disabled:cursor-not-allowed transition-all duration-200"
               />
               
               {/* Attachment Button */}
