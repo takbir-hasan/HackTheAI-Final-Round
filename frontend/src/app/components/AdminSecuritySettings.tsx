@@ -250,55 +250,50 @@ const AdminSecuritySettings: React.FC<AdminSecuritySettingsProps> = ({
   };
 
   const handleSaveChanges = async (): Promise<void> => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setIsLoading(true);
-    setErrors({});
-    setSuccessMessage('');
+  setIsLoading(true);
+  setErrors({});
+  setSuccessMessage('');
 
-    try {
-      if (onChangePassword) {
-        await onChangePassword(formData);
-        setSuccessMessage('Password changed successfully!');
-      } else if (apiConfig) {
-        // Direct API call if no handler provided
-        const response = await apiCall<unknown>('/admin/change-password', {
-          method: 'POST',
-          body: {
-            oldPassword: formData.oldPassword,
-            newPassword: formData.newPassword
-          }
-        });
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) throw new Error('Access token missing');
 
-        if (response.success) {
-          setSuccessMessage(response.message || 'Password changed successfully!');
-        } else {
-          throw new Error(response.message || 'Failed to change password');
-        }
-      }
+    const response = await fetch('http://localhost:3000/api/users/change-password', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        oldPassword: formData.oldPassword,
+        newPassword: formData.newPassword
+      })
+    });
 
-      // Reset form on success
-      setFormData({
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: ''
-      });
+    const data = await response.json();
 
-      // Reset password visibility
-      setShowPasswords({
-        old: false,
-        new: false,
-        confirm: false
-      });
-
-    } catch (error) {
-      setErrors({
-        general: error instanceof Error ? error.message : 'Failed to change password. Please try again.'
-      });
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to change password');
     }
-  };
+
+    setSuccessMessage(data.message || 'Password changed successfully!');
+    setFormData({
+      oldPassword: '',
+      newPassword: '',
+      confirmNewPassword: ''
+    });
+    setShowPasswords({ old: false, new: false, confirm: false });
+  } catch (error) {
+    setErrors({
+      general: error instanceof Error ? error.message : 'Failed to change password. Please try again.'
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const getInitials = (): string => {
     return userName.split(' ').map(name => name.charAt(0)).join('').toUpperCase().slice(0, 2);
@@ -340,40 +335,6 @@ const AdminSecuritySettings: React.FC<AdminSecuritySettingsProps> = ({
           {errors.general}
         </div>
       )}
-
-      {/* Admin Info Card */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-6">
-        <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          Account Information
-        </h3>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            {userPhoto ? (
-              <Image
-                src={userPhoto}
-                alt="Admin Profile"
-                width={64}
-                height={64}
-                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-sm"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-4 border-white shadow-sm flex items-center justify-center text-white text-xl font-bold">
-                {getInitials()}
-              </div>
-            )}
-            <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
-              ADMIN
-            </div>
-          </div>
-          <div>
-            <p className="text-lg font-semibold text-blue-900">{userName}</p>
-            <p className="text-blue-700 text-sm">Administrator Account</p>
-          </div>
-        </div>
-      </div>
 
       {/* Change Password Section */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 lg:p-8 shadow-sm">
