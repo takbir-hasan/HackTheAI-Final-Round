@@ -25,6 +25,13 @@ const demoUser: UserProfile = {
   profilePhoto: undefined // Will use placeholder
 };
 
+// Interface for security form data
+interface SecurityFormData {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
 export default function ProfilePage() {
   // Handle profile update
   const handleUpdateProfile = async (updatedProfile: UserProfile) => {
@@ -84,6 +91,41 @@ export default function ProfilePage() {
     }
   };
 
+  // Handle password change
+  const handleChangePassword = async (passwords: SecurityFormData) => {
+    try {
+      // Here you would make an API call to change the password
+      console.log('Changing password:', { 
+        oldPassword: '***hidden***', 
+        newPassword: '***hidden***' 
+      });
+      
+      // Example API call:
+      // const response = await fetch('/api/user/change-password', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${localStorage.getItem('token')}`
+      //   },
+      //   body: JSON.stringify({
+      //     oldPassword: passwords.oldPassword,
+      //     newPassword: passwords.newPassword
+      //   })
+      // });
+      
+      // if (!response.ok) {
+      //   const error = await response.json();
+      //   throw new Error(error.message || 'Failed to change password');
+      // }
+      
+      // Success feedback
+      console.log('Password changed successfully!');
+    } catch (error) {
+      console.error('Error changing password:', error);
+      throw new Error('Failed to change password');
+    }
+  };
+
   // Handle sign out
   const handleSignOut = () => {
     // Clear authentication data
@@ -105,6 +147,7 @@ export default function ProfilePage() {
           user={demoUser}
           onUpdateProfile={handleUpdateProfile}
           onUploadPhoto={handleUploadPhoto}
+          onChangePassword={handleChangePassword}
           onSignOut={handleSignOut}
         />
       </main>
