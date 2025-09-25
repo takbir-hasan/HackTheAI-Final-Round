@@ -2,9 +2,18 @@
 
 import React, { useState } from 'react';
 import LoginModal from './LoginModal';
+import RegisterModal from './RegisterModal';
+
+interface RegisterFormData {
+  email: string;
+  accountName: string;
+  password: string;
+  confirmPassword: string;
+}
 
 const Navbar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
@@ -12,6 +21,10 @@ const Navbar = () => {
 
   const handleLoginModalClose = () => {
     setIsLoginModalOpen(false);
+  };
+
+  const handleRegisterModalClose = () => {
+    setIsRegisterModalOpen(false);
   };
 
   const handleLogin = async (email: string, password: string) => {
@@ -31,9 +44,30 @@ const Navbar = () => {
     });
   };
 
-  const handleRegister = () => {
-    console.log('Redirecting to registration page...');
-    // Here you can add navigation to registration page
+  const handleRegister = async (formData: RegisterFormData) => {
+    try {
+      // Your registration logic here
+      console.log('Registering with:', formData);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Handle successful registration
+      alert('Registration successful! Please check your email for verification.');
+    } catch (error) {
+      // Error will be handled by the modal component
+      throw new Error('Registration failed. Email might already be in use.');
+    }
+  };
+
+  const handleSwitchToLogin = () => {
+    setIsRegisterModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(true);
   };
 
   const handleForgotPassword = () => {
@@ -97,8 +131,16 @@ const Navbar = () => {
         isOpen={isLoginModalOpen}
         onClose={handleLoginModalClose}
         onLogin={handleLogin}
-        onRegister={handleRegister}
+        onRegister={handleSwitchToRegister}
         onForgotPassword={handleForgotPassword}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={handleRegisterModalClose}
+        onRegister={handleRegister}
+        onLogin={handleSwitchToLogin}
       />
     </nav>
   );
