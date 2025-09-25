@@ -64,10 +64,10 @@ export const login = async (req, res) => {
 
   const accessToken = jwt.sign({ id: user._id, email: user.email }, ACCESS_SECRET, { expiresIn: ACCESS_EXPIRES_IN });
   const refreshToken = jwt.sign({ id: user._id, email: user.email }, REFRESH_SECRET, { expiresIn: REFRESH_EXPIRES_IN });
-
+  const role = user.role
   refreshTokens.push(refreshToken);
 
-  res.json({ accessToken, refreshToken });
+  res.json({ accessToken, refreshToken, role });
 };
 
 export const refreshAccessToken = (req, res) => {

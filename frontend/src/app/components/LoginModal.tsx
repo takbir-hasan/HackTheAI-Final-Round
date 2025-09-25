@@ -131,9 +131,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
 
       // On success → save tokens in localStorage
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken, refreshToken, role } = res.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("role", role);
       setFormData({ email: '', password: '' });
       onClose?.();
       router.push("/profile");
