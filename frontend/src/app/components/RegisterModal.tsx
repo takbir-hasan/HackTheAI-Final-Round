@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import ConfirmEmailModal from './ConfirmEmailModal';
 
 interface RegisterFormData {
   email: string;
@@ -43,6 +44,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [isConfirmEmailOpen, setIsConfirmEmailOpen] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
@@ -159,13 +161,14 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setErrors({});
 
     try {
-      if (onRegister) {
-        await onRegister(formData);
-      }
-      onClose();
+      // Simulate sending verification email
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Open email confirmation modal
+      setIsConfirmEmailOpen(true);
     } catch (error) {
       setErrors({
-        general: error instanceof Error ? error.message : 'Registration failed. Please try again.'
+        general: error instanceof Error ? error.message : 'Failed to send verification email. Please try again.'
       });
     } finally {
       setIsLoading(false);
@@ -186,7 +189,58 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     }
   };
 
+  const handleEmailVerification = async (code: string): Promise<void> => {
+    try {
+      // Simulate verification API call
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (code === '123456') { // Demo verification code
+            resolve('success');
+          } else {
+            reject(new Error('Invalid verification code'));
+          }
+        }, 1000);
+      });
+
+      // If verification successful, complete registration
+      if (onRegister) {
+        await onRegister(formData);
+      }
+      
+      // Close both modals
+      setIsConfirmEmailOpen(false);
+      onClose();
+      
+      alert('Registration successful! Welcome to our university!');
+    } catch (error) {
+      throw error; // Let ConfirmEmailModal handle the error
+    }
+  };
+
+  const handleResendVerificationCode = async (): Promise<void> => {
+    // Simulate resending verification code
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log('Verification code resent to:', formData.email);
+  };
+
+  const handleCloseConfirmEmail = (): void => {
+    setIsConfirmEmailOpen(false);
+  };
+
   if (!isOpen) return null;
+
+  // Hide RegisterModal when ConfirmEmailModal is open
+  if (isConfirmEmailOpen) {
+    return (
+      <ConfirmEmailModal
+        isOpen={isConfirmEmailOpen}
+        onClose={handleCloseConfirmEmail}
+        onVerify={handleEmailVerification}
+        onResendCode={handleResendVerificationCode}
+        userEmail={formData.email}
+      />
+    );
+  }
 
   return (
     <div 
@@ -419,7 +473,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                     </svg>
-                    <span>Create Account</span>
+                    <span>Confirm Email</span>
                   </div>
                 )}
               </button>
