@@ -108,7 +108,7 @@ const ServicesSection: React.FC<ServicesProps> = ({ onServiceClick, className = 
 
   return (
     <div className={`bg-gray-100 py-12 sm:py-16 lg:py-20 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="service max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12 lg:mb-16">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-3 sm:mb-4">
