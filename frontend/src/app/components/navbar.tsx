@@ -1,8 +1,47 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
+import LoginModal from './LoginModal';
 
 const Navbar = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLoginModalClose = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleLogin = async (email: string, password: string) => {
+    // Here you can add your actual login logic
+    console.log('Login attempt:', { email, password });
+    
+    // Simulate API call
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (email === 'admin@university.edu' && password === 'password') {
+          console.log('Login successful');
+          resolve('success');
+        } else {
+          reject(new Error('Invalid credentials'));
+        }
+      }, 1000);
+    });
+  };
+
+  const handleRegister = () => {
+    console.log('Redirecting to registration page...');
+    // Here you can add navigation to registration page
+  };
+
+  const handleForgotPassword = () => {
+    console.log('Redirecting to forgot password page...');
+    // Here you can add navigation to forgot password page
+  };
   return (
-    <nav className="bg-blue-600 text-white px-6 py-3.5 shadow-lg fixed w-full top-0 z-50 ">
+    <nav className="bg-blue-600 text-white pl-4 md:pl-6 pr-2 md:pr-4 py-3.5 shadow-lg fixed w-full top-0 z-50 ">
       <div className="flex items-center justify-between px-2 mx-auto">
         {/* Logo and Brand */}
         <div className="flex items-center space-x-3">
@@ -20,30 +59,47 @@ const Navbar = () => {
           </h1>
         </div>
         {/* Navigation Links */}
-        <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-8 text-xs md:text-sm lg:text-base">
+        <div className="flex items-center space-x-2 md:space-x-4 lg:space-x-6 text-xs md:text-sm lg:text-base">
           <a 
             href="/about" 
-            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100"
+            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100 whitespace-nowrap"
           >
             About Us
           </a>
           <a 
             href="/services" 
-            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100"
+            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100 whitespace-nowrap xs:inline-block"
           >
             Services
           </a>
           <a 
             href="/contact" 
-            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100"
+            className="hover:text-yellow-200 transition-colors duration-200 cursor-pointer hover:transform hover:scale-105 delay-100 whitespace-nowrap"
           >
             Contact
           </a>
-          <button className="bg-yellow-300 text-blue-900 px-3 py-1.5 rounded-md font-medium hover:bg-yellow-400 hover:font-semibold transition-colors duration-200">
-            Log In
+          <button 
+            onClick={handleLoginClick}
+            className="bg-yellow-300 text-blue-900 px-2 py-1.5 md:px-3 md:py-2 rounded-md font-medium hover:bg-yellow-400 hover:font-semibold transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-opacity-50 whitespace-nowrap text-xs md:text-sm"
+          >
+            {/* <div className="flex items-center justify-center space-x-1">
+              <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg> */}
+              <span>Login</span>
+            {/* </div> */}
           </button>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={handleLoginModalClose}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+        onForgotPassword={handleForgotPassword}
+      />
     </nav>
   );
 };
