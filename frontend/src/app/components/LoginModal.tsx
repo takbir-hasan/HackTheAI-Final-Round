@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -25,7 +28,6 @@ interface FormErrors {
 const LoginModal: React.FC<LoginModalProps> = ({
   isOpen,
   onClose,
-  onLogin,
   onRegister,
   onForgotPassword,
   className = ''
@@ -39,6 +41,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
+
 
   // Focus email input when modal opens
   useEffect(() => {
@@ -120,19 +125,30 @@ const LoginModal: React.FC<LoginModalProps> = ({
     setErrors({});
 
     try {
-      if (onLogin) {
-        await onLogin(formData.email, formData.password);
-      }
-      // Reset form on success
-      setFormData({ email: '', password: '' });
-      onClose();
-    } catch (error) {
-      setErrors({
-        general: 'Invalid email or password. Please try again.'
+      const res = await axios.post(`http://localhost:3000/api/auth/login`, formData, {
+        headers: { "Content-Type": "application/json" },
       });
+
+
+      // On success → save tokens in localStorage
+      const { accessToken, refreshToken } = res.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      setFormData({ email: '', password: '' });
+      onClose?.();
+      router.push("/profile");
+    } catch (err: any) {
+      console.error("Login error:", err.response?.data || err.message);
+
+      if (err.response?.status === 401) {
+        setErrors({ general: 'Invalid email or password' });
+      } else {
+        setErrors({ general: 'Server error. Please try again later.' });
+      }
     } finally {
       setIsLoading(false);
     }
+
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
