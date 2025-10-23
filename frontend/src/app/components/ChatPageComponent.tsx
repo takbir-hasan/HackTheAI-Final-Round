@@ -40,7 +40,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
   const [isListening, setIsListening] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<unknown>(null);
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
@@ -149,7 +149,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
   // 🎤 Voice recognition logic
   const startListening = () => {
     const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      (window as unknown).SpeechRecognition || (window as unknown).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Speech Recognition is not supported in this browser.");
       return;
@@ -169,7 +169,7 @@ const ChatPageComponent: React.FC<ChatComponentProps> = ({
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: unknown) => {
       const transcript = event.results[0][0].transcript;
       setInputValue(transcript);
       if (inputRef.current) inputRef.current.focus();
