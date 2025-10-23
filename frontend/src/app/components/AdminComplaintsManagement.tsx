@@ -143,7 +143,7 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
         />
         <select
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value as unknown)}
+          onChange={e => setStatusFilter(e.target.value as "Pending" | "In-progress" | "Resolved" | "all")}
           className="px-3 py-2 border rounded-lg"
         >
           <option value="all">All Status</option>
