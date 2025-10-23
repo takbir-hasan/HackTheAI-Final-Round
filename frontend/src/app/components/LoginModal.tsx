@@ -138,7 +138,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       setFormData({ email: '', password: '' });
       onClose?.();
       router.push("/chat");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err.response?.data || err.message);
 
       if (err.response?.status === 401) {
