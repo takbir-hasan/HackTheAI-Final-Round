@@ -41,7 +41,7 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
   const [statusFilter, setStatusFilter] = useState<'all' | Complaint['status']>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const apiCall = useCallback(async <T,>(endpoint: string, options: any = {}): Promise<ApiResponse<T>> => {
+  const apiCall = useCallback(async <T,>(endpoint: string, options: unknown = {}): Promise<ApiResponse<T>> => {
     const { method = 'GET', body, headers = {} } = options;
     const url = `http://localhost:3000${endpoint}`;
     try {
@@ -99,7 +99,7 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
     } else {
       alert(res.data?.message || 'Failed to update status.');
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
     alert(err.response?.data?.message || 'Failed to update status.');
   } finally {
@@ -138,7 +138,7 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
         />
         <select
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value as any)}
+          onChange={e => setStatusFilter(e.target.value as unknown)}
           className="px-3 py-2 border rounded-lg"
         >
           <option value="all">All Status</option>
