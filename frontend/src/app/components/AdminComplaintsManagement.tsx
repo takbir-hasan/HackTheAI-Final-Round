@@ -41,7 +41,7 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
   const [statusFilter, setStatusFilter] = useState<'all' | Complaint['status']>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const apiCall = useCallback(async <T,>(endpoint: string, options: unknown = {}): Promise<ApiResponse<T>> => {
+  const apiCall = useCallback(async <T,>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
     const { method = 'GET', body, headers = {} } = options;
     const url = `http://localhost:3000${endpoint}`;
     try {
