@@ -222,7 +222,7 @@ const ConfirmEmailModal: React.FC<ConfirmEmailModalProps> = ({
             
             <div className="bg-gray-50 rounded-2xl p-3 mb-4">
               <p className="text-gray-700 text-sm leading-relaxed">
-                We've sent a 6-digit verification code to:
+                We&apos;ve sent a 6-digit verification code to:
               </p>
               <p className="font-semibold text-green-600 mt-1 text-sm">
                 📧 {getMaskedEmail(userEmail)}
@@ -327,7 +327,7 @@ const ConfirmEmailModal: React.FC<ConfirmEmailModalProps> = ({
             {/* Resend Code Section */}
             <div className="mt-4 space-y-2 text-center">
               <p className="text-green-100 text-xs">
-                Didn't receive the code?
+                Didn&apos;t receive the code?
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4">
