@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 // Adjust the path '...' to wherever you defined the type
-import type { AdminApiConfig } from './AdminPageComponent'; 
+import type { AdminApiConfig } from '../admin_m/admin'; 
 // Or maybe: import type { AdminApiConfig } from '@/app/types/api';
 
 interface Complaint {
