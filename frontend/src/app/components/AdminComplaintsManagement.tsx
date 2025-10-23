@@ -100,8 +100,13 @@ const AdminComplaintsManagement: React.FC<AdminComplaintsManagementProps> = ({ c
       alert(res.data?.message || 'Failed to update status.');
     }
   } catch (err: unknown) {
-    console.error(err);
-    alert(err.response?.data?.message || 'Failed to update status.');
+   console.error(err);
+    if (axios.isAxiosError(err)) {
+      // এখন TypeScript জানে যে 'err'-এর ভেতরে 'response' আছে
+      alert(err.response?.data?.message || 'Failed to update status.');
+    } else {
+      alert('Failed to update status.');
+    }
   } finally {
     setLoading(false);
   }
