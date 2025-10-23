@@ -20,6 +20,7 @@ interface Complaint {
 }
 
 interface AdminComplaintsManagementProps {
+  apiConfig: AdminApiConfig | undefined;
   className?: string;
 }
 
