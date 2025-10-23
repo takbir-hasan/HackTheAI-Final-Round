@@ -112,7 +112,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       router.push("/profile");
       onClose();
       setFormData({ email: "", accountName: "", password: "", confirmPassword: "" });
-    } catch (err: any) {
+    } catch (err: unknown) {
       setErrors({
         general: err.response?.data?.message || "Server error. Please try again.",
       });
